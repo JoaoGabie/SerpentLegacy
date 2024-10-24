@@ -36,7 +36,37 @@ public class CollisionChecker {
         snake.solidArea.y = snake.positionY;
 
         // Verifica se as áreas sólidas se sobrepõem (indicando colisão)
-        return player.solidArea.intersects(snake.solidArea);
+        if (player.solidArea.intersects(snake.solidArea)) {
+            resolveCollision(player, snake);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void resolveCollision(Entity player, Snake snake) {
+        // Calcula a sobreposição no eixo X e Y entre o player e a snake
+        int overlapX = Math.min(player.solidArea.x + player.solidArea.width, snake.solidArea.x + snake.solidArea.width)
+                - Math.max(player.solidArea.x, snake.solidArea.x);
+        int overlapY = Math.min(player.solidArea.y + player.solidArea.height, snake.solidArea.y + snake.solidArea.height)
+                - Math.max(player.solidArea.y, snake.solidArea.y);
+
+        // Ajusta apenas a posição da snake para evitar sobreposição
+        if (overlapX < overlapY) {
+            // Colisão no eixo X
+            if (player.positionX < snake.positionX) {
+                snake.positionX += overlapX;  // Move a snake para a direita
+            } else {
+                snake.positionX -= overlapX;  // Move a snake para a esquerda
+            }
+        } else {
+            // Colisão no eixo Y
+            if (player.positionY < snake.positionY) {
+                snake.positionY += overlapY;  // Move a snake para baixo
+            } else {
+                snake.positionY -= overlapY;  // Move a snake para cima
+            }
+        }
     }
 }
 
