@@ -35,8 +35,43 @@ public class CollisionChecker {
         snake.solidArea.x = snake.positionX;
         snake.solidArea.y = snake.positionY;
 
-        // Verifica se as áreas sólidas se sobrepõem (indicando colisão)
-        return player.solidArea.intersects(snake.solidArea);
+//        player.solidArea.x += player.positionX;
+//        player.solidArea.y += player.positionY;
+//
+//        snake.solidArea.x += snake.positionX;
+//        snake.solidArea.y += snake.positionY;
+
+        if (player.solidArea.intersects(snake.solidArea)) {
+            resolveCollision(player, snake);
+            return true;
+        }// Verifica se as áreas sólidas se sobrepõem (indicando colisão)
+
+
+        return false;
+    }
+    private void resolveCollision(Entity player, Snake snake) {
+        // Lógica para ajustar a posição dos objetos
+        // Verificar de que lado a colisão aconteceu e ajustar a posição adequadamente
+
+        if (player.positionX < snake.positionX) {
+            // Move entity1 para a esquerda e entity2 para a direita
+            player.positionX -= 1; // Ajuste a quantidade conforme necessário
+            snake.positionX += 1;
+        } else if (player.positionX > snake.positionX) {
+            // Move entity1 para a direita e entity2 para a esquerda
+            player.positionX += 1;
+            snake.positionX -= 1;
+        }
+
+        if (player.positionY < snake.positionY) {
+            // Move entity1 para cima e entity2 para baixo
+            player.positionY -= 1;
+            snake.positionY += 1;
+        } else if (player.positionY > snake.positionY) {
+            // Move entity1 para baixo e entity2 para cima
+            player.positionY += 5;
+            snake.positionY -= 1;
+        }
     }
 }
 
