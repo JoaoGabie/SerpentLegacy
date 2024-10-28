@@ -2,6 +2,7 @@ package Entity;
 
 import Main.GamePanel;
 
+import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -9,7 +10,7 @@ public class Entity {
     public String name;
     public int positionX, positionY;
     public Rectangle solidArea;
-
+    public int solidAreaX, solidAreaY;
 
     public int speed;
     public int damage;       // Dano que a entidade pode causar
@@ -45,15 +46,15 @@ public class Entity {
         return positionX;
     }
 
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
     public int getPositionY() {
         return positionY;
     }
 
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
+    public int getSolidAreaAbsoluteX() {
+        return positionX + solidArea.x;
+    }
+
+    public int getSolidAreaAbsoluteY() {
+        return positionY + solidArea.y;
     }
 }

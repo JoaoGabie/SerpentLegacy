@@ -22,7 +22,8 @@ public class Snake extends Entity {
         leftSprites = new BufferedImage[4];
         setDefaultValues();
         getSnakeImage();
-        solidArea = new Rectangle(0,9,22,15);
+
+       solidArea = new Rectangle(24,24,22,22);
     }
 
     public void setDefaultValues() {
@@ -60,8 +61,10 @@ public class Snake extends Entity {
 
     public void followPlayer(Player player) {
         // Calcular a diferença entre a posição da cobra e do jogador
-        int dx = player.getPositionX() - this.positionX;
-        int dy = player.getPositionY() - this.positionY;
+        int centralizePostionX = 7;
+        int centralizePostionY = 15;
+        int dx = player.getPositionX() - this.positionX + centralizePostionX;
+        int dy = player.getPositionY() - this.positionY + centralizePostionY;
 
         // Calcular a distância entre a cobra e o jogador
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -103,6 +106,10 @@ public class Snake extends Entity {
     }
     public void draw(Graphics2D g2, Player player) {
         BufferedImage image = null;
+
+        // Draw the solidArea (collision box) for debugging
+        g2.setColor(Color.blue);
+        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
 
         // Garantir que spriteNum fique dentro dos limites da array de sprites
         spriteNum = spriteNum % leftSprites.length;

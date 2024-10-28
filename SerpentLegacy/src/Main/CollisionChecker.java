@@ -28,10 +28,11 @@ public class CollisionChecker {
     }
 
     // Verifica colisão entre o player e as cobras
-    public boolean checkCollision(Entity player, Snake snake) {
+    public boolean checkCollision(Entity player, Entity snake) {
         // Atualiza as áreas sólidas das entidades com suas posições atuais
-        player.solidArea.x = player.positionX;
-        player.solidArea.y = player.positionY;
+
+        player.solidArea.x = player.getPositionX();
+        player.solidArea.y = player.getPositionY();
         snake.solidArea.x = snake.positionX;
         snake.solidArea.y = snake.positionY;
 
@@ -40,31 +41,30 @@ public class CollisionChecker {
             resolveCollision(player, snake);
             return true;
         }
-
         return false;
     }
 
-    private void resolveCollision(Entity player, Snake snake) {
-        // Calcula a sobreposição no eixo X e Y entre o player e a snake
+    private void resolveCollision(Entity player, Entity snake) {
+        // Calcula a sobreposição no eixo X e Y entre as entidades
         int overlapX = Math.min(player.solidArea.x + player.solidArea.width, snake.solidArea.x + snake.solidArea.width)
                 - Math.max(player.solidArea.x, snake.solidArea.x);
         int overlapY = Math.min(player.solidArea.y + player.solidArea.height, snake.solidArea.y + snake.solidArea.height)
                 - Math.max(player.solidArea.y, snake.solidArea.y);
 
-        // Ajusta apenas a posição da snake para evitar sobreposição
+        // Ajusta apenas a posição de entity2 para evitar sobreposição com entity1
         if (overlapX < overlapY) {
             // Colisão no eixo X
             if (player.positionX < snake.positionX) {
-                snake.positionX += overlapX;  // Move a snake para a direita
+                snake.positionX += overlapX;  // Move entity2 para a direita
             } else {
-                snake.positionX -= overlapX;  // Move a snake para a esquerda
+                snake.positionX -= overlapX;  // Move entity2 para a esquerda
             }
         } else {
             // Colisão no eixo Y
             if (player.positionY < snake.positionY) {
-                snake.positionY += overlapY;  // Move a snake para baixo
+                snake.positionY += overlapY;  // Move entity2 para baixo
             } else {
-                snake.positionY -= overlapY;  // Move a snake para cima
+                snake.positionY -= overlapY;  // Move entity2 para cima
             }
         }
     }

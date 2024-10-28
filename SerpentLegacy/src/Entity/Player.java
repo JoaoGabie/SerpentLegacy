@@ -12,6 +12,7 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+
     public void attack() {
         // Implementar a lógica de ataque, como verificar se uma cobra está na área de ataque
     }
@@ -21,21 +22,11 @@ public class Player extends Entity {
         this.gp = gp;
         this.keyH = keyH;
 
-                solidArea = new Rectangle(18,24,12,21);
+        solidArea = new Rectangle(-16,-5,16,40);
 
         setDefaultValues();
         getPlayerImage();
     }
-
-    // Getters para positionX e positionY
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
 
     public void setDefaultValues(){
         positionX = 100;
@@ -203,7 +194,13 @@ public class Player extends Entity {
                     Image = rightStandard;
                 break;
         }
-        g2.drawImage(Image, positionX, positionY, gp.tileSize, gp.tileSize, null);
+
+
+        g2.drawImage(Image, getPositionX() - 16, getPositionY() - 5, gp.tileSize, gp.tileSize, null);
+
+        // Draw the solidArea (collision box) for debugging
+        g2.setColor(Color.RED); // Set the color for the rectangle
+        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
 
     }
 
