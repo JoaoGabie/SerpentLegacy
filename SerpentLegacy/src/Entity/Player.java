@@ -22,7 +22,7 @@ public class Player extends Entity {
         this.gp = gp;
         this.keyH = keyH;
 
-        solidArea = new Rectangle(-16,-5,16,40);
+        solidArea = new Rectangle(0,0,16,40);
 
         setDefaultValues();
         getPlayerImage();
@@ -196,11 +196,11 @@ public class Player extends Entity {
         }
 
 
-        g2.drawImage(Image, getPositionX() - 16, getPositionY() - 5, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(Image, getPositionX(), getPositionY(), gp.tileSize, gp.tileSize, null);
 
         // Draw the solidArea (collision box) for debugging
         g2.setColor(Color.RED); // Set the color for the rectangle
-        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
+        g2.drawRect(positionX + 16, positionY + 5, solidArea.width, solidArea.height);
 
     }
 

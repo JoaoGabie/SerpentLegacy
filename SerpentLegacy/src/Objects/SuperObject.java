@@ -15,4 +15,6 @@ public class SuperObject {
             g2.drawImage(image, gp.positionX, gp.positionY, gp.tileSize, gp.tileSize, null);
         }
     }
+
+
 }

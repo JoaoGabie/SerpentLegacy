@@ -1,9 +1,10 @@
 package Entity;
 import java.awt.*;
 import Entity.Player;
-import Main.CollisionChecker;
+import Main.GamePanel;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 import javax.imageio.ImageIO;
 
 

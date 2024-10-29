@@ -10,7 +10,7 @@ public class CollisionChecker {
         this.gp = gp;
     }
 
-    // Verifica se a entidade (player ou cobra) está colidindo com as bordas da tela
+//     Verifica se a entidade (player ou cobra) está colidindo com as bordas da tela
     public void checkScreenLimits(Entity entity) {
         // Limites da tela (pode ser ajustado conforme necessário)
         if (entity.positionX < 0) {
@@ -31,8 +31,10 @@ public class CollisionChecker {
     public boolean checkCollision(Entity player, Entity snake) {
         // Atualiza as áreas sólidas das entidades com suas posições atuais
 
-        player.solidArea.x = player.getPositionX();
-        player.solidArea.y = player.getPositionY();
+        int centerX = player.getPositionX() + 16;
+        int centerY = player.getPositionY() + 5;
+        player.solidArea.x = centerX;
+        player.solidArea.y = centerY;
         snake.solidArea.x = snake.positionX;
         snake.solidArea.y = snake.positionY;
 

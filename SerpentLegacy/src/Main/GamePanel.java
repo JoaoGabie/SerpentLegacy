@@ -140,11 +140,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        collisionChecker.checkScreenLimits(player);
+//        collisionChecker.checkScreenLimits(player);
 
         for (Snake snake : snakes) {
             snake.update(player); // Atualiza a posição da cobra
-            collisionChecker.checkScreenLimits(snake); // Verifica os limites da cobra
+//            collisionChecker.checkScreenLimits(snake); // Verifica os limites da cobra
 
             // Verifica se o player colidiu com a cobra
             if (collisionChecker.checkCollision(player, snake)) {
@@ -155,11 +155,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         player.update();
     }
-
-    private int getPlayer(Entity.Player player) {
-        return Player;
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
