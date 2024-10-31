@@ -3,6 +3,8 @@ package Main;
 import Entity.Entity;
 import Entity.Snake;
 
+import java.util.List;
+
 public class CollisionChecker {
     GamePanel gp;
 
@@ -69,6 +71,67 @@ public class CollisionChecker {
                 snake.positionY -= overlapY;  // Move entity2 para cima
             }
         }
+    }
+
+//--------------------------------------------------------------------------------------
+
+    // Atualiza o solidArea para refletir a posição real
+    private void updateSolidArea(Entity entity) {
+        entity.solidArea.x = entity.getPositionX();
+        entity.solidArea.y = entity.getPositionY();
+    }
+
+    // Verifica colisão entre todas as cobras na lista
+    public void checkAllSnakesCollision(List<Snake> snakes) {
+        for (int i = 0; i < snakes.size(); i++) {
+            Snake snake1 = snakes.get(i);
+            updateSolidArea(snake1);
+
+            for (int j = i + 1; j < snakes.size(); j++) {
+                Snake snake2 = snakes.get(j);
+                updateSolidArea(snake2);
+
+                if (checkCollisionBetweenSnakes(snake1, snake2)) {
+                    resolveCollision(snake1, snake2);
+                }
+            }
+        }
+    }
+
+    // Verifica colisão entre duas cobras específicas
+    public boolean checkCollisionBetweenSnakes(Snake snake1, Snake snake2) {
+        return snake1.solidArea.intersects(snake2.solidArea);
+    }
+
+    // Ajusta a posição para resolver a colisão
+    private void resolveCollision(Snake snake1, Snake snake2) {
+        int overlapX = Math.min(snake1.solidArea.x + snake1.solidArea.width, snake2.solidArea.x + snake2.solidArea.width)
+                - Math.max(snake1.solidArea.x, snake2.solidArea.x);
+        int overlapY = Math.min(snake1.solidArea.y + snake1.solidArea.height, snake2.solidArea.y + snake2.solidArea.height)
+                - Math.max(snake1.solidArea.y, snake2.solidArea.y);
+
+        if (overlapX < overlapY) {
+            // Colisão no eixo X
+            if (snake1.positionX < snake2.positionX) {
+                snake1.positionX -= overlapX / 2;
+                snake2.positionX += overlapX / 2;
+            } else {
+                snake1.positionX += overlapX / 2;
+                snake2.positionX -= overlapX / 2;
+            }
+        } else {
+            // Colisão no eixo Y
+            if (snake1.positionY < snake2.positionY) {
+                snake1.positionY -= overlapY / 2;
+                snake2.positionY += overlapY / 2;
+            } else {
+                snake1.positionY += overlapY / 2;
+                snake2.positionY -= overlapY / 2;
+            }
+        }
+
+        updateSolidArea(snake1);
+        updateSolidArea(snake2);
     }
 }
 

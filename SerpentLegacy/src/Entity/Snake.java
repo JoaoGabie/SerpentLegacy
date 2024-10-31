@@ -24,7 +24,7 @@ public class Snake extends Entity {
         setDefaultValues();
         getSnakeImage();
 
-       solidArea = new Rectangle(24,24,22,22);
+       solidArea = new Rectangle(0,0,22,22);
     }
 
     public void setDefaultValues() {
@@ -86,7 +86,6 @@ public class Snake extends Entity {
                 direction = dy > 0 ? "down" : "up";
             }
         }
-//        updateAnimation();
     }
 
 
@@ -109,8 +108,8 @@ public class Snake extends Entity {
         BufferedImage image = null;
 
         // Draw the solidArea (collision box) for debugging
-        g2.setColor(Color.blue);
-        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
+//        g2.setColor(Color.blue);
+//        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
 
         // Garantir que spriteNum fique dentro dos limites da array de sprites
         spriteNum = spriteNum % leftSprites.length;

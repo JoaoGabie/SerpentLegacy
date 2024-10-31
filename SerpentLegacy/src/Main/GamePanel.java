@@ -140,7 +140,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-//        collisionChecker.checkScreenLimits(player);
+        collisionChecker.checkScreenLimits(player);
+        collisionChecker.checkAllSnakesCollision(snakes);
 
         for (Snake snake : snakes) {
             snake.update(player); // Atualiza a posição da cobra
