@@ -28,8 +28,6 @@ public class Snake extends Entity {
     }
 
     public void setDefaultValues() {
-//        this.positionX = 100;
-//        this.positionY = 200;
         this.speed = 3;
         this.direction = "right"; // Começa movendo para a direita por padrão
     }

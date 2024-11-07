@@ -1,7 +1,6 @@
 package Main;
 
-import Entity.Player;
-import Entity.Snake;
+import Entity.*;
 import Objects.SuperObject;
 
 
@@ -16,22 +15,22 @@ import java.util.Random;
 
 
 public class GamePanel extends JPanel implements Runnable {
-    final int originalTileSize = 16; //16x16
-    final int scale = 3;
-    private List<Snake> snakes = new ArrayList<>();
 
-    public int tileSize = originalTileSize * scale; //48
+    static final int originalTileSize = 16; //16x16
+    public static int scale = 3;
+    public static int tileSize = originalTileSize * scale;
+
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
     final public int screenWidth = tileSize * maxScreenCol; //768
     final public int screenHeight = tileSize * maxScreenRow; //576
-    public int Player = originalTileSize * scale;
+
     public int positionX;
     public int positionY;
     public int limitWidth = 646;
     public int limitHeight = 466;
 
-
+    private List<Snake> snakes = new ArrayList<>();
 
     int FPS = 60;
 
@@ -39,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public Player player;
-
+    
 
     public Image backgroundImage;
     public SuperObject obj[] = new SuperObject[10];
@@ -65,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void spawnSnakes() {
-        int numberOfSnakes = 10; // Número de cobras a serem criadas
+        int numberOfSnakes = 0; // Número de cobras a serem criadas
         Random random = new Random();
 
         for (int i = 0; i < numberOfSnakes; i++) {
@@ -149,7 +148,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Verifica se o player colidiu com a cobra
             if (collisionChecker.checkCollision(player, snake)) {
-                System.out.println("Colisão detectada entre o player e a cobra!");
+//                System.out.println("Colisão detectada entre o player e a cobra!");
                 // Você pode implementar alguma lógica aqui, como diminuir vida, reiniciar posição, etc.
             }
         }

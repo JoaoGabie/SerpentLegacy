@@ -35,8 +35,8 @@ public class CollisionChecker {
 
         int centerX = player.getPositionX() + 16;
         int centerY = player.getPositionY() + 5;
-        player.solidArea.x = centerX;
-        player.solidArea.y = centerY;
+        player.solidArea.x = player.getCorrectPositionX(player.positionX, 16);
+        player.solidArea.y = player.getCorrectPositionY(player.positionY, 5);
         snake.solidArea.x = snake.positionX;
         snake.solidArea.y = snake.positionY;
 
