@@ -14,6 +14,7 @@ public class Entity {
     public int positionX, positionY;
     public Rectangle solidArea, attackHitbox;
     public boolean isHitboxVisible = false;
+    public boolean iWannaSeeTheAllHitboxes = false;
 
     public int speed;
     public int damage;       // Dano que a entidade pode causar

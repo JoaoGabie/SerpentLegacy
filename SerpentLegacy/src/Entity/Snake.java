@@ -105,10 +105,6 @@ public class Snake extends Entity {
     public void draw(Graphics2D g2, Player player) {
         BufferedImage image = null;
 
-        // Draw the solidArea (collision box) for debugging
-//        g2.setColor(Color.blue);
-//        g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
-
         // Garantir que spriteNum fique dentro dos limites da array de sprites
         spriteNum = spriteNum % leftSprites.length;
 
@@ -136,6 +132,12 @@ public class Snake extends Entity {
             } else {
                 image = leftSprites[spriteNum];   // Use o sprite de "left" para cima
                 direction = "up";
+            }
+
+            // Draw the solidArea (collision box) for debugging
+            if(player.iWannaSeeTheAllHitboxes){
+                g2.setColor(Color.blue);
+                g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
             }
         }
 

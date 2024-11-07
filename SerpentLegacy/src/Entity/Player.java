@@ -94,9 +94,13 @@ public class Player extends Entity {
     private final double attackFrameDelay = 6.5; // Atraso para tornar a animação mais lenta
 
     public void update() {
-        // Bloqueia o movimento quando está atacando
+        //the deBugButton, to see all hitboxes
+        if(keyH.debugButton){
+            iWannaSeeTheAllHitboxes = true;
+        }
+
+        // Movimentação (não ocorre durante o ataque)
         if (!isAttacking) {
-            // Movimentação
             boolean isMoving = false;
 
             if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
@@ -128,7 +132,7 @@ public class Player extends Entity {
             attack(); // Inicia o ataque
         }
 
-        // Animação de ataque
+        // Animação de ataque e hitbox
         if (isAttacking) {
             attackFrameCounter++; // Incrementa o contador de delay
 
@@ -136,11 +140,39 @@ public class Player extends Entity {
                 attackFrame++; // Avança o quadro da animação de ataque
                 attackFrameCounter = 0; // Reseta o contador de delay
 
-                if (attackFrame > 4) { // Assume que existem 4 frames de ataque
+                if (attackFrame == 4) {
+                    // Ativa a hitbox no último quadro do ataque
+                    isHitboxVisible = true;
+                    updateAttackHitboxPosition(); // Atualiza a posição da hitbox
+                } else {
+                    isHitboxVisible = false;
+                }
+
+                if (attackFrame > 4) {
                     isAttacking = false; // Finaliza o ataque
                     attackFrame = 1; // Reinicia o frame do ataque
+                    isHitboxVisible = false; // Desativa a hitbox ao final do ataque
                 }
             }
+        }
+    }
+
+    // Atualiza a posição da hitbox com base na direção
+    public void updateAttackHitboxPosition() {
+
+        switch (direction) {
+            case "up":
+                attackHitbox.setBounds(getCorrectPositionX(positionX,18), getCorrectPositionY(positionY,-43), 15, 54); // Para cima
+                break;
+            case "down":
+                attackHitbox.setBounds(getCorrectPositionX(positionX,18), getCorrectPositionY(positionY,36), 14,54); // Para baixo
+                break;
+            case "left":
+                attackHitbox.setBounds(getCorrectPositionX(positionX,-40), getCorrectPositionY(positionY,18),54,15); // Para esquerda
+                break;
+            case "right":
+                attackHitbox.setBounds(getCorrectPositionX(positionX,33), getCorrectPositionY(positionY,18),54,15 ); // Para direita
+                break;
         }
     }
 
@@ -333,10 +365,19 @@ public void draw(Graphics2D g2) {
     }
 
 
-//        // Draw the solidArea (collision box) for debugging
-        g2.setColor(Color.RED); // Set the color for the rectangle
-        g2.drawRect(getCorrectPositionX(positionX, 15), getCorrectPositionX(positionY, 5), solidArea.width, solidArea.height);
+                if (isHitboxVisible) {
+                    g2.setColor(Color.RED); // Atack
+                    g2.drawRect(attackHitbox.x, attackHitbox.y, attackHitbox.width, attackHitbox.height);
+
+                    // Draw the solidArea (collision box) for debugging
+
+                }
+            g2.setColor(Color.RED); // Set the color for the rectangle
+            g2.drawRect(getCorrectPositionX(positionX, 15), getCorrectPositionX(positionY, 5), solidArea.width, solidArea.height);
+
     }
+
+
 
     // Método para receber dano
     public void takeDamage(int amount) {

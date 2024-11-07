@@ -64,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void spawnSnakes() {
-        int numberOfSnakes = 0; // Número de cobras a serem criadas
+        int numberOfSnakes =0; // Número de cobras a serem criadas
         Random random = new Random();
 
         for (int i = 0; i < numberOfSnakes; i++) {
