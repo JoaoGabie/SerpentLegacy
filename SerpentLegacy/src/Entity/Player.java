@@ -20,20 +20,20 @@ public class Player extends Entity {
         this.gp = gp;
         this.keyH = keyH;
 
-        attackHitbox = new Rectangle(0,0,54, 15);
-        solidArea = new Rectangle(0,0,17,40);
+        this.positionX = 200;
+        this.positionY = 100;
+        this.damage = 1;
+        this.health = 3;
+        this.speed = 4;
+        this.direction = "down";
 
-        setDefaultValues();
+        this.attackHitbox = new Rectangle(0,0,54, 15);
+        this.solidArea = new Rectangle(0,0,17,40);
+
         getPlayerImage();
         getPlayerAtackImage();
     }
 
-    public void setDefaultValues(){
-        positionX = 100;
-        positionY = 100;
-        speed = 4;
-        direction = "down";
-    }
     public void getPlayerImage (){
         try{
             upStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_Standart.png"));
@@ -52,7 +52,7 @@ public class Player extends Entity {
             System.out.println("Erro: Caminho da imagem do Player está incorreto ou a imagem não foi encontrada.");
         }catch(IOException e){
             e.printStackTrace();
-            System.out.println("Erro de leitura ao carregar a imagem do Player. Verifique o arquivo e tente novamente.");
+            System.out.println("Erro: de leitura ao carregar a imagem do Player. Verifique o arquivo e tente novamente.");
         }
     }
 
@@ -144,6 +144,7 @@ public class Player extends Entity {
                     // Ativa a hitbox no último quadro do ataque
                     isHitboxVisible = true;
                     updateAttackHitboxPosition(); // Atualiza a posição da hitbox
+
                 } else {
                     isHitboxVisible = false;
                 }
@@ -152,6 +153,7 @@ public class Player extends Entity {
                     isAttacking = false; // Finaliza o ataque
                     attackFrame = 1; // Reinicia o frame do ataque
                     isHitboxVisible = false; // Desativa a hitbox ao final do ataque
+                    updateAttackHitboxPosition();
                 }
             }
         }
@@ -159,22 +161,27 @@ public class Player extends Entity {
 
     // Atualiza a posição da hitbox com base na direção
     public void updateAttackHitboxPosition() {
+        if (isAttacking) {
+            switch (direction) {
+                case "up":
+                    attackHitbox.setBounds(getCorrectPositionX(positionX, 18), getCorrectPositionY(positionY, -43), 15, 54); // Para cima
+                    break;
+                case "down":
+                    attackHitbox.setBounds(getCorrectPositionX(positionX, 18), getCorrectPositionY(positionY, 36), 14, 54); // Para baixo
+                    break;
+                case "left":
+                    attackHitbox.setBounds(getCorrectPositionX(positionX, -40), getCorrectPositionY(positionY, 18), 54, 15); // Para esquerda
+                    break;
+                case "right":
+                    attackHitbox.setBounds(getCorrectPositionX(positionX, 33), getCorrectPositionY(positionY, 18), 54, 15); // Para direita
+                    break;
 
-        switch (direction) {
-            case "up":
-                attackHitbox.setBounds(getCorrectPositionX(positionX,18), getCorrectPositionY(positionY,-43), 15, 54); // Para cima
-                break;
-            case "down":
-                attackHitbox.setBounds(getCorrectPositionX(positionX,18), getCorrectPositionY(positionY,36), 14,54); // Para baixo
-                break;
-            case "left":
-                attackHitbox.setBounds(getCorrectPositionX(positionX,-40), getCorrectPositionY(positionY,18),54,15); // Para esquerda
-                break;
-            case "right":
-                attackHitbox.setBounds(getCorrectPositionX(positionX,33), getCorrectPositionY(positionY,18),54,15 ); // Para direita
-                break;
+            }
+        } else {
+            attackHitbox.setBounds(0, 0, 0, 0);
         }
     }
+
 
     private void updatePosition() {
         double diffX = 0.0;
@@ -383,7 +390,7 @@ public void draw(Graphics2D g2) {
     public void takeDamage(int amount) {
         health -= amount;
         if (health <= 0) {
-            // Implementar a lógica para quando a saúde do player chega a zero (game over, etc.)
+            // Implementar a lógica para quando a saúde do player check a zero (game over, etc.)
         }
     }
 }

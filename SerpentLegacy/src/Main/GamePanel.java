@@ -2,17 +2,12 @@ package Main;
 
 import Entity.*;
 import Objects.SuperObject;
-
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.io.IOException;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
-
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -30,15 +25,12 @@ public class GamePanel extends JPanel implements Runnable {
     public int limitWidth = 646;
     public int limitHeight = 466;
 
-    private List<Snake> snakes = new ArrayList<>();
-
     int FPS = 60;
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public Player player;
-    
 
     public Image backgroundImage;
     public SuperObject obj[] = new SuperObject[10];
@@ -59,12 +51,12 @@ public class GamePanel extends JPanel implements Runnable {
 
         player = new Player(this, keyH, 100, 200, 5, 10, 1); // Cria uma instância de Player após inicializar a imagem de fundo
 
-        snakes = new ArrayList<>();
+        Entity.getSnakes();
         spawnSnakes(); // Cria cobras no início
     }
 
     private void spawnSnakes() {
-        int numberOfSnakes =0; // Número de cobras a serem criadas
+        int numberOfSnakes = 25; // Número de cobras a serem criadas
         Random random = new Random();
 
         for (int i = 0; i < numberOfSnakes; i++) {
@@ -98,7 +90,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             // Cria a cobra nas coordenadas geradas
             Snake snake = new Snake(x, y, 2, 5, 10);
-            snakes.add(snake);
+            Entity.getSnakes().add(snake);
         }
     }
 
@@ -140,15 +132,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         collisionChecker.checkScreenLimits(player);
-        collisionChecker.checkAllSnakesCollision(snakes);
+        collisionChecker.checkAllSnakesCollision(Entity.getSnakes());
+        collisionChecker.checkAttackCollision(player, Entity.getSnakes());
 
-        for (Snake snake : snakes) {
+        for (Snake snake : Entity.getSnakes()) {
             snake.update(player); // Atualiza a posição da cobra
-//            collisionChecker.checkScreenLimits(snake); // Verifica os limites da cobra
 
             // Verifica se o player colidiu com a cobra
             if (collisionChecker.checkCollision(player, snake)) {
-//                System.out.println("Colisão detectada entre o player e a cobra!");
+
                 // Você pode implementar alguma lógica aqui, como diminuir vida, reiniciar posição, etc.
             }
         }
@@ -162,7 +154,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         // Desenha as cobras
-        for (Snake snake : snakes) {
+        for (Snake snake : Entity.getSnakes()) {
             snake.draw(g2, player);
         }
         // Desenha o fundo

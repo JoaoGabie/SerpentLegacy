@@ -8,7 +8,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 
-public class Snake extends Entity {
+public class Snake extends Enemy {
     private BufferedImage[] rightSprites;
     private BufferedImage[] leftSprites;
     private int currentFrame = 0;
@@ -19,6 +19,9 @@ public class Snake extends Entity {
 
     public Snake(int positionX, int positionY, int speed, int damage, int health) {
         super("Snake", positionX, positionY, speed, damage, health);
+        this.health = 1;
+        this.damage = 1;
+
         rightSprites = new BufferedImage[4];
         leftSprites = new BufferedImage[4];
         setDefaultValues();

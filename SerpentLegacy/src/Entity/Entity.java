@@ -1,12 +1,17 @@
 package Entity;
 
+import Main.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
-public class Entity {
+public abstract class Entity {
 
 
 
@@ -26,6 +31,9 @@ public class Entity {
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
+
+    private List<Entity> entityList = new ArrayList<>();
+    private static List<Snake> snakes = new ArrayList<>();
 
     // Construtor
     public Entity(String name, int positionX, int positionY, int speed, int damage, int health) {
@@ -50,23 +58,27 @@ public class Entity {
         }
         return image;
     }
-
-    // Método auxiliar para ajuste da posição
-    public void setAdjustedPosition(int adjustX, int adjustY) {
-        this.positionX += adjustX;
-        this.positionY += adjustY;
+    public void receiveAttack (Rectangle attackHitbox, int damage) {
+        if (this.solidArea.intersects(attackHitbox)) {
+            takeDamage(damage);
+        }
     }
 
-
-    // Métodos adicionais (se necessário)
+    // Aplica o dano à entidade
     public void takeDamage(int amount) {
         health -= amount;
-        if (health < 0) health = 0;
+        if (health <= 0) {
+            onDeath();
+        }
+    }
 
+
+//     Método para morte (ação que ocorre quando a entidade morre)
+    protected void onDeath() {
+        System.out.println(name + " morreu!");
+        // Outras ações quando a entidade morre (pode ser removida da lista, animação, etc.)
     }
-    public void attack(Entity target) {
-        target.takeDamage(damage);
-    }
+
     public int getPositionX() {
         return positionX;
     }
@@ -81,5 +93,9 @@ public class Entity {
 
     public int getCorrectPositionY(int positionY, int valueCorrect){
         return positionY + valueCorrect;
+    }
+
+    public static List<Snake> getSnakes() {
+        return snakes; // retorna a lista original
     }
 }
