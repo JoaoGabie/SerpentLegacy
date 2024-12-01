@@ -1,25 +1,36 @@
 package Entity;
 
-import Main.GamePanel;
-
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Entity {
+
+public abstract class Entity {
+
+
+
     public String name;
     public int positionX, positionY;
-    public Rectangle solidArea;
-
+    public Rectangle solidArea, attackHitbox;
+    public boolean isHitboxVisible = false;
+    public boolean iWannaSeeTheAllHitboxes = false;
 
     public int speed;
     public int damage;       // Dano que a entidade pode causar
     public int health;       // Saúde da entidade
 
-    public BufferedImage upStandard, up1, up2, downStandard, down1, down2, leftStandard, left1, left2, left3,left4,rightStandard,right1,right2, right3, right4;
+    public BufferedImage upStandard, up1, up2, downStandard, down1, down2, leftStandard, left1, rightStandard, right1;
+    public BufferedImage  atackLeft1, atackLeft2, atackLeft3, atackLeft4, atackRight1, atackRight2, atackRight3, atackRight4, atackUP1, atackUP2, atackUP3, atackUP4, atackDown1, atackDown2, atackDown3, atackDown4;
     public String direction;
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
+
+    private List<Entity> entityList = new ArrayList<>();
+    private static List<Snake> snakes = new ArrayList<>();
 
     // Construtor
     public Entity(String name, int positionX, int positionY, int speed, int damage, int health) {
@@ -32,28 +43,56 @@ public class Entity {
     }
 
 
-    // Métodos adicionais (se necessário)
+
+    public BufferedImage getSprite(String imagePath) {
+        BufferedImage image = null;
+        try {
+            // Carrega a imagem do caminho fornecido
+            image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+    public void receiveAttack (Rectangle attackHitbox, int damage) {
+        if (this.solidArea.intersects(attackHitbox)) {
+            takeDamage(damage);
+        }
+    }
+
+    // Aplica o dano à entidade
     public void takeDamage(int amount) {
         health -= amount;
-        if (health < 0) health = 0;
+        if (health <= 0) {
+            onDeath();
+        }
+    }
 
+
+//     Método para morte (ação que ocorre quando a entidade morre)
+    protected void onDeath() {
+        System.out.println(name + " morreu!");
+        // Outras ações quando a entidade morre (pode ser removida da lista, animação, etc.)
     }
-    public void attack(Entity target) {
-        target.takeDamage(damage);
-    }
+
     public int getPositionX() {
         return positionX;
-    }
-
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
     }
 
     public int getPositionY() {
         return positionY;
     }
 
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
+    public int getCorrectPositionX(int positionX, int valueCorrect) {
+        return positionX + valueCorrect;
+    }
+
+    public int getCorrectPositionY(int positionY, int valueCorrect){
+        return positionY + valueCorrect;
+    }
+
+    public static List<Snake> getListOfSnakes() {
+        return snakes; // retorna a lista original
     }
 }

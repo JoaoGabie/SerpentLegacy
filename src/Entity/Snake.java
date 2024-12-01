@@ -1,13 +1,14 @@
 package Entity;
 import java.awt.*;
 import Entity.Player;
-import Main.CollisionChecker;
+import Main.GamePanel;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 import javax.imageio.ImageIO;
 
 
-public class Snake extends Entity {
+public class Snake extends Enemy {
     private BufferedImage[] rightSprites;
     private BufferedImage[] leftSprites;
     private int currentFrame = 0;
@@ -18,16 +19,18 @@ public class Snake extends Entity {
 
     public Snake(int positionX, int positionY, int speed, int damage, int health) {
         super("Snake", positionX, positionY, speed, damage, health);
+        this.health = 1;
+        this.damage = 1;
+
         rightSprites = new BufferedImage[4];
         leftSprites = new BufferedImage[4];
         setDefaultValues();
         getSnakeImage();
-        solidArea = new Rectangle(0,9,22,15);
+
+       solidArea = new Rectangle(0,0,22,22);
     }
 
     public void setDefaultValues() {
-//        this.positionX = 100;
-//        this.positionY = 200;
         this.speed = 3;
         this.direction = "right"; // Começa movendo para a direita por padrão
     }
@@ -60,8 +63,10 @@ public class Snake extends Entity {
 
     public void followPlayer(Player player) {
         // Calcular a diferença entre a posição da cobra e do jogador
-        int dx = player.getPositionX() - this.positionX;
-        int dy = player.getPositionY() - this.positionY;
+        int centralizePostionX = 7;
+        int centralizePostionY = 15;
+        int dx = player.getPositionX() - this.positionX + centralizePostionX;
+        int dy = player.getPositionY() - this.positionY + centralizePostionY;
 
         // Calcular a distância entre a cobra e o jogador
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -82,7 +87,6 @@ public class Snake extends Entity {
                 direction = dy > 0 ? "down" : "up";
             }
         }
-//        updateAnimation();
     }
 
 
@@ -131,6 +135,12 @@ public class Snake extends Entity {
             } else {
                 image = leftSprites[spriteNum];   // Use o sprite de "left" para cima
                 direction = "up";
+            }
+
+            // Draw the solidArea (collision box) for debugging
+            if(player.iWannaSeeTheAllHitboxes){
+                g2.setColor(Color.blue);
+                g2.drawRect(positionX, positionY, solidArea.width, solidArea.height);
             }
         }
 

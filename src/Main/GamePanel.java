@@ -1,12 +1,7 @@
 package Main;
 
-import Entity.Player;
-import Entity.Snake;
+import Entity.*;
 import Objects.SuperObject;
-
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.io.IOException;
@@ -14,24 +9,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
-
 public class GamePanel extends JPanel implements Runnable {
-    final int originalTileSize = 16; //16x16
-    final int scale = 3;
-    private List<Snake> snakes = new ArrayList<>();
 
-    public int tileSize = originalTileSize * scale; //48
+    static final int originalTileSize = 16; //16x16
+    public static int scale = 3;
+    public static int tileSize = originalTileSize * scale;
+
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
     final public int screenWidth = tileSize * maxScreenCol; //768
     final public int screenHeight = tileSize * maxScreenRow; //576
-    public int Player = originalTileSize * scale;
+
     public int positionX;
     public int positionY;
     public int limitWidth = 646;
     public int limitHeight = 466;
-
-
 
     int FPS = 60;
 
@@ -40,9 +32,9 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public Player player;
 
-
     public Image backgroundImage;
-    public SuperObject obj[] = new SuperObject[10];
+    public Image backgroundImageTop;
+    public Random random = new Random();
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -52,7 +44,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         try {
-            backgroundImage = ImageIO.read(getClass().getResourceAsStream("/res/tiles/threes.png"));
+            backgroundImage = ImageIO.read(getClass().getResourceAsStream("/res/tiles/threes_tropical.png"));
+            backgroundImageTop = ImageIO.read(getClass().getResourceAsStream("/res/tiles/threes_tropical_top.png"));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error loading background image");
@@ -60,15 +53,22 @@ public class GamePanel extends JPanel implements Runnable {
 
         player = new Player(this, keyH, 100, 200, 5, 10, 1); // Cria uma instância de Player após inicializar a imagem de fundo
 
-        snakes = new ArrayList<>();
-        spawnSnakes(); // Cria cobras no início
+        Entity.getListOfSnakes();
+        manageSnakes(25);
     }
 
-    private void spawnSnakes() {
-        int numberOfSnakes = 5; // Número de cobras a serem criadas
-        Random random = new Random();
+    private void manageSnakes(int numberOfSnakes) {
 
-        for (int i = 0; i < numberOfSnakes; i++) {
+
+        // Remove cobras com saúde menor ou igual a 0
+        Entity.getListOfSnakes().removeIf(snake -> snake.health <= 0);
+
+        // Verifica quantas cobras estão faltando
+        int currentSnakes = Entity.getListOfSnakes().size();
+        int snakesToSpawn = numberOfSnakes - currentSnakes;
+
+        // Gera cobras apenas se o número atual for menor que o desejado
+        for (int i = 0; i < snakesToSpawn; i++) {
             int x = 0;
             int y = 0;
 
@@ -98,11 +98,10 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             // Cria a cobra nas coordenadas geradas
-            Snake snake = new Snake(x, y, 2, 5, 10);
-            snakes.add(snake);
+            Snake snake = new Snake(x, y, 2, 5, 10); // Ajuste os valores conforme necessário
+            Entity.getListOfSnakes().add(snake);
         }
     }
-
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -141,26 +140,22 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         collisionChecker.checkScreenLimits(player);
+        collisionChecker.checkAllSnakesCollision(Entity.getListOfSnakes());
+        collisionChecker.checkAttackCollision(player, Entity.getListOfSnakes());
 
-
-        for (Snake snake : snakes) {
+        for (Snake snake : Entity.getListOfSnakes()) {
             snake.update(player); // Atualiza a posição da cobra
-            collisionChecker.checkScreenLimits(snake); // Verifica os limites da cobra
 
             // Verifica se o player colidiu com a cobra
             if (collisionChecker.checkCollision(player, snake)) {
-                System.out.println("Colisão detectada entre o player e a cobra!");
+
                 // Você pode implementar alguma lógica aqui, como diminuir vida, reiniciar posição, etc.
             }
         }
 
         player.update();
+        manageSnakes(5);
     }
-
-    private int getPlayer(Entity.Player player) {
-        return Player;
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -168,15 +163,20 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         // Desenha as cobras
-        for (Snake snake : snakes) {
+        for (Snake snake : Entity.getListOfSnakes()) {
             snake.draw(g2, player);
         }
+        if (backgroundImageTop != null) {
+            g2.drawImage(backgroundImageTop, 0, 0, screenWidth, screenHeight, this);
+        }
+        player.draw(g2);
+
         // Desenha o fundo
         if (backgroundImage != null) {
             g2.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight, this);
         }
         // Desenha o player
-        player.draw(g2);
+
 
         g2.dispose();
     }
