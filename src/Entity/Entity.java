@@ -19,8 +19,10 @@ public abstract class Entity {
     public boolean iWannaSeeTheAllHitboxes = false;
 
     public int speed;
-    public int damage;       // Dano que a entidade pode causar
-    public int health;       // Saúde da entidade
+    public int damage;  // Dano que a entidade pode causar
+    public int health;  // Saúde da entidade
+    public boolean isDying = false;
+    public int deathFrame = 0;
 
     public BufferedImage upStandard, up1, up2, downStandard, down1, down2, leftStandard, left1, rightStandard, right1;
     public BufferedImage  atackLeft1, atackLeft2, atackLeft3, atackLeft4, atackRight1, atackRight2, atackRight3, atackRight4, atackUP1, atackUP2, atackUP3, atackUP4, atackDown1, atackDown2, atackDown3, atackDown4;
@@ -28,7 +30,6 @@ public abstract class Entity {
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
-
     private List<Entity> entityList = new ArrayList<>();
     private static List<Snake> snakes = new ArrayList<>();
 
@@ -66,11 +67,16 @@ public abstract class Entity {
         health -= amount;
         if (health <= 0) {
             onDeath();
+            startDeathAnimation();
         }
     }
 
+    public void startDeathAnimation() {
+        isDying = true;
+        deathFrame = 0;
+    }
 
-//     Método para morte (ação que ocorre quando a entidade morre)
+    //     Método para morte (ação que ocorre quando a entidade morre)
     protected void onDeath() {
         System.out.println(name + " morreu!");
         // Outras ações quando a entidade morre (pode ser removida da lista, animação, etc.)

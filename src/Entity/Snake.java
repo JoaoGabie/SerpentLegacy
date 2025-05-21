@@ -1,16 +1,17 @@
 package Entity;
 import java.awt.*;
-import Entity.Player;
-import Main.GamePanel;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Random;
 import javax.imageio.ImageIO;
 
 
-public class Snake extends Enemy {
-    private BufferedImage[] rightSprites;
-    private BufferedImage[] leftSprites;
+public class Snake extends Entity {
+    private BufferedImage[] rightWalking;
+    private BufferedImage[] leftWalking;
+    public BufferedImage[] leftDying;
+    public BufferedImage[] rightDying;
+    public BufferedImage[] leftAttack;
+    public BufferedImage[] rightAttack;
     private int currentFrame = 0;
     private int frameDelay = 10; // Controla a velocidade da animação
     private int spriteCounter = 0;
@@ -22,12 +23,12 @@ public class Snake extends Enemy {
         this.health = 1;
         this.damage = 1;
 
-        rightSprites = new BufferedImage[4];
-        leftSprites = new BufferedImage[4];
+        rightWalking = new BufferedImage[4];
+        leftWalking = new BufferedImage[4];
         setDefaultValues();
         getSnakeImage();
 
-       solidArea = new Rectangle(0,0,22,22);
+        solidArea = new Rectangle(0,0,22,22);
     }
 
     public void setDefaultValues() {
@@ -38,14 +39,14 @@ public class Snake extends Enemy {
     public void getSnakeImage () {
         try {
             // Carregar os sprites da pasta
-            leftSprites[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Left_walking1.png"));
-            leftSprites[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Left_walking2.png"));
-            leftSprites[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Left_walking3.png"));
-            leftSprites[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Left_walking4.png"));
-            rightSprites[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Right_walking1.png"));
-            rightSprites[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Right_walking2.png"));
-            rightSprites[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Right_walking3.png"));
-            rightSprites[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake_Right_walking4.png"));
+            leftWalking[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Left_walking1.png"));
+            leftWalking[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Left_walking2.png"));
+            leftWalking[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Left_walking3.png"));
+            leftWalking[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Left_walking4.png"));
+            rightWalking[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Right_walking1.png"));
+            rightWalking[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Right_walking2.png"));
+            rightWalking[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Right_walking3.png"));
+            rightWalking[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Walking/Snake_Right_walking4.png"));
             System.out.println("Sprites carregados com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +54,70 @@ public class Snake extends Enemy {
         }
     }
 
+    public void getSnakeDieImage () {
+        try {
+            // Carregar os sprites da pasta
+            leftDying[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Left_dying1.png"));
+            leftDying[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Left_dying2.png"));
+            leftDying[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Left_dying3.png"));
+            leftDying[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Left_dying4.png"));
+            leftDying[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Left_dying5.png"));
+
+            rightDying[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Right_dying1.png"));
+            rightDying[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Right_dying2.png"));
+            rightDying[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Right_dying3.png"));
+            rightDying[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Right_dying4.png"));
+            rightDying[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Dying/Snake_Right_dying5.png"));
+            System.out.println("Sprites carregados com sucesso!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao carregar sprites da cobra de morrer.");
+        }
+    }
+
+    public void getSnakeAttackImage () {
+        try {
+            // Carregar os sprites da pasta
+            leftAttack[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack1.png"));
+            leftAttack[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack2.png"));
+            leftAttack[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack3.png"));
+            leftAttack[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack4.png"));
+            leftAttack[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack5.png"));
+            leftAttack[5] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack6.png"));
+            leftAttack[6] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack7.png"));
+            leftAttack[7] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack8.png"));
+            leftAttack[8] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack9.png"));
+            leftAttack[9] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack10.png"));
+
+            rightAttack[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack1.png"));
+            rightAttack[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack2.png"));
+            rightAttack[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack3.png"));
+            rightAttack[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack4.png"));
+            rightAttack[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack5.png"));
+            rightAttack[5] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack6.png"));
+            rightAttack[6] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack7.png"));
+            rightAttack[7] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack8.png"));
+            rightAttack[8] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack9.png"));
+            rightAttack[9] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack10.png"));
+
+            System.out.println("Sprites carregados com sucesso!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao carregar sprites da cobra de Atack.");
+        }
+    }
+
     public void update(Player player) {
+        if (isDying) {
+            deathFrame++;
+            if (deathFrame >= leftDying.length * frameDelay) {
+                // Animação concluída, sinalize para o CollisionChecker remover a cobra
+                isDying = false;
+                System.out.println("Animação de morte concluída. Cobra pronta para remoção.");
+            }
+            return;
+        }
+
         // Atualiza a posição da cobra com base na posição do jogador
         followPlayer(player);
 
@@ -90,11 +154,12 @@ public class Snake extends Enemy {
     }
 
 
+
     private void updateAnimation() {
         spriteCounter++;
         if (spriteCounter > frameDelay) { // Ajuste o número para controlar a velocidade da animação
             spriteNum++;
-            if (spriteNum >= leftSprites.length) { // Como temos 4 sprites
+            if (spriteNum >= leftWalking.length) { // Como temos 4 sprites
                 spriteNum = 0;
             }
             spriteCounter = 0;
@@ -109,7 +174,7 @@ public class Snake extends Enemy {
         BufferedImage image = null;
 
         // Garantir que spriteNum fique dentro dos limites da array de sprites
-        spriteNum = spriteNum % leftSprites.length;
+        spriteNum = spriteNum % leftWalking.length;
 
         // Cálculo do deslocamento entre a cobra e o jogador
         int dx = player.getPositionX() - this.positionX;
@@ -118,24 +183,32 @@ public class Snake extends Enemy {
         // Defina o fator de escala (por exemplo, 2.0 para dobrar o tamanho)
         double scaleFactor = 1.4;
 
+        if (isDying) {
+            int frameIndex = deathFrame / frameDelay;
+            BufferedImage deathImage = facingRight ? rightDying[frameIndex] : leftDying[frameIndex];
+            g2.drawImage(deathImage, positionX, positionY, null);
+            return;
+        }
+
         if (Math.abs(dx) > Math.abs(dy)) {
             // Cobra se move mais horizontalmente
             if (dx > 0) {
-                image = rightSprites[spriteNum];  // Movendo para a direita
+                image = rightWalking[spriteNum];  // Movendo para a direita
                 direction = "right";
             } else {
-                image = leftSprites[spriteNum];   // Movendo para a esquerda
+                image = leftWalking[spriteNum];   // Movendo para a esquerda
                 direction = "left";
             }
         } else {
             // Cobra se move mais verticalmente
             if (dy > 0) {
-                image = rightSprites[spriteNum];  // Use o sprite de "right" para baixo
+                image = rightWalking[spriteNum];  // Use o sprite de "right" para baixo
                 direction = "down";
             } else {
-                image = leftSprites[spriteNum];   // Use o sprite de "left" para cima
+                image = leftWalking[spriteNum];   // Use o sprite de "left" para cima
                 direction = "up";
             }
+
 
             // Draw the solidArea (collision box) for debugging
             if(player.iWannaSeeTheAllHitboxes){
