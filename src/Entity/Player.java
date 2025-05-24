@@ -15,6 +15,7 @@ public class Player extends Entity {
     private int attackFrame = 0;
 
 
+
     public Player(GamePanel gp, KeyHandler keyH, int positionX, int positionY, int speed, int damage, int health) {
         super("Player", positionX, positionY, speed, damage, health);
         this.gp = gp;
@@ -30,59 +31,150 @@ public class Player extends Entity {
         this.attackHitbox = new Rectangle(0,0,54, 15);
         this.solidArea = new Rectangle(0,0,17,40);
 
-        getPlayerImage();
-        getPlayerAtackImage();
+
+        upWalking = new BufferedImage[2];
+        downWalking = new BufferedImage[2];
+        leftWalking = new BufferedImage[2];
+        rightWalking = new BufferedImage[2];
+
+        upIdle = new BufferedImage[1];   // Parado olhando pra cima
+        downIdle = new BufferedImage[1]; // Parado pra baixo
+        leftIdle = new BufferedImage[1];
+        rightIdle = new BufferedImage[1];
+
+        upAttack = new BufferedImage[4];
+        downAttack = new BufferedImage[4];
+        leftAttack = new BufferedImage[4];
+        rightAttack = new BufferedImage[4];
+
+        upDying = new BufferedImage[1];
+        downDying = new BufferedImage[1];
+        leftDying = new BufferedImage[1];
+        rightDying = new BufferedImage[1];
+
+        // Agora carrega as sprites em cada array:
+        loadPlayerSprites();
+
+//        getPlayerImage();
+//        getPlayerAtackImage();
     }
 
-    public void getPlayerImage (){
-        try{
-            upStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_Standart.png"));
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_walking1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_walking2.png"));
-            downStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_Standart.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_walking1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_walking2.png"));
-            leftStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Left_Standart.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Left_Walking.png"));
-            rightStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Right_Standart.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Right_Walking1.png"));
 
+    private void loadPlayerSprites() {
+
+        try{// Walking
+            upWalking[0] = upIdle[0];
+            upWalking[1] = getSprite("/res/player/SpritePlayer_UP_walking1.png");
+            upWalking[2] = getSprite("/res/player/SpritePlayer_UP_walking2.png");
+            downWalking[0] = downIdle[0];
+            downWalking[1] = getSprite("/res/player/SpritePlayer_Down_walking1.png");
+            downWalking[2] = getSprite("/res/player/SpritePlayer_Down_walking2.png");
+            leftWalking[0] = getSprite("/res/player/SpritePlayer_Left_Standart.png");
+            leftWalking[1] = getSprite("/res/player/SpritePlayer_Left_walking1.png");
+            rightWalking[0] = getSprite("/res/player/SpritePlayer_RightStandart.png");
+            rightWalking[1] = getSprite("/res/player/SpritePlayer_Right_walking1.png");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            System.out.println("Erro: Caminho da imagem do Player está incorreto ou a imagem não foi encontrada.");
-        }catch(IOException e){
+            System.out.println("Erro: Caminho da imagem de WALKING do Player está incorreto ou a imagem não foi encontrada.");
+        }
+        try{// Idle
+            upIdle[0] = getSprite("/res/player/SpritePlayer_UP_Standart.png");
+            downIdle[0] = getSprite("/res/player/SpritePlayer_DownStandart.png");
+            leftIdle[0] = getSprite("/res/player/SpritePlayer_LeftStandart.png");
+            rightIdle[0] = getSprite("/res/player/SpritePlayer_RightStandart.png");
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            System.out.println("Erro: de leitura ao carregar a imagem do Player. Verifique o arquivo e tente novamente.");
+            System.out.println("Erro: Caminho da imagem IDLE do Player está incorreto ou a imagem não foi encontrada.");
+        }
+        try {// Attacking
+            upAttack[0] = getSprite("/res/player/SpritePlayer_UP_Atack1");
+            upAttack[1] = getSprite("/res/player/SpritePlayer_UP_Atack2");
+            upAttack[2] = getSprite("/res/player/SpritePlayer_UP_Atack3");
+            upAttack[3] = getSprite("/res/player/SpritePlayer_UP_Atack4");
+        } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+        System.out.println("Erro: Caminho da imagem de attack do Player está incorreta ou a imagem não foi encontrada.");
+        }
+
+        // Dying
+
+    }
+
+    @Override
+    public BufferedImage getWalkingFrame(String dir, int frame) {
+        switch (dir) {
+            case "up":    return upWalking[frame];
+            case "down":  return downWalking[frame];
+            case "left":  return leftWalking[frame];
+            case "right": return rightWalking[frame];
+            default: return downIdle[0];
         }
     }
 
-    public void getPlayerAtackImage (){
-        try{
-            atackLeft1 = getSprite("/res/player/SpritePlayer_LEFT_Atack1");
-            atackLeft2 = getSprite("/res/player/SpritePlayer_LEFT_Atack2");
-            atackLeft3 = getSprite("/res/player/SpritePlayer_LEFT_Atack3");
-            atackLeft4 = getSprite("/res/player/SpritePlayer_LEFT_Atack4");
 
-            atackRight1 = getSprite("/res/player/SpritePlayer_RIGHT_Atack1");
-            atackRight2 = getSprite("/res/player/SpritePlayer_RIGHT_Atack2");
-            atackRight3 = getSprite("/res/player/SpritePlayer_RIGHT_Atack3");
-            atackRight4 = getSprite("/res/player/SpritePlayer_RIGHT_Atack4");
-
-            atackUP1 = getSprite("/res/player/SpritePlayer_UP_Atack1");
-            atackUP2 = getSprite("/res/player/SpritePlayer_UP_Atack2");
-            atackUP3 = getSprite("/res/player/SpritePlayer_UP_Atack3");
-            atackUP4 = getSprite("/res/player/SpritePlayer_UP_Atack4");
-
-            atackDown1 = getSprite("/res/player/SpritePlayer_DOWN_Atack1");
-            atackDown2 = getSprite("/res/player/SpritePlayer_DOWN_Atack2");
-            atackDown3 = getSprite("/res/player/SpritePlayer_DOWN_Atack3");
-            atackDown4 = getSprite("/res/player/SpritePlayer_DOWN_Atack4");
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            System.out.println("Erro: Caminho da imagem de atack do Player está incorreta ou a imagem não foi encontrada.");
+    @Override
+    public BufferedImage getAttackImage(String dir, int frame) {
+        switch (dir) {
+                case "up1":   return upAttack[frame];
+                case "down":  return downAttack[frame];
+                case "left":  return leftAttack[frame];
+                case "right": return rightAttack[frame];
+                default: return downIdle[frame];
         }
     }
+
+    public void deletarDps() {
+//        public void getPlayerImage() {
+//            try {
+//                upStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_Standart.png"));
+//                up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_walking1.png"));
+//                up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_UP_walking2.png"));
+//                downStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_Standart.png"));
+//                down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_walking1.png"));
+//                down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_DOWN_walking2.png"));
+//                leftStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Left_Standart.png"));
+//                left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Left_Walking.png"));
+//                rightStandard = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Right_Standart.png"));
+//                right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/SpritePlayer_Right_Walking1.png"));
+//
+//            } catch (IllegalArgumentException e) {
+//                e.printStackTrace();
+//                System.out.println("Erro: Caminho da imagem do Player está incorreto ou a imagem não foi encontrada.");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                System.out.println("Erro: de leitura ao carregar a imagem do Player. Verifique o arquivo e tente novamente.");
+//            }
+//        }
+//
+//        public void getPlayerAtackImage () {
+//            try {
+//                atackLeft1 = getSprite("/res/player/SpritePlayer_LEFT_Atack1");
+//                atackLeft2 = getSprite("/res/player/SpritePlayer_LEFT_Atack2");
+//                atackLeft3 = getSprite("/res/player/SpritePlayer_LEFT_Atack3");
+//                atackLeft4 = getSprite("/res/player/SpritePlayer_LEFT_Atack4");
+//
+//                atackRight1 = getSprite("/res/player/SpritePlayer_RIGHT_Atack1");
+//                atackRight2 = getSprite("/res/player/SpritePlayer_RIGHT_Atack2");
+//                atackRight3 = getSprite("/res/player/SpritePlayer_RIGHT_Atack3");
+//                atackRight4 = getSprite("/res/player/SpritePlayer_RIGHT_Atack4");
+//
+//                atackUP1 = getSprite("/res/player/SpritePlayer_UP_Atack1");
+//                atackUP2 = getSprite("/res/player/SpritePlayer_UP_Atack2");
+//                atackUP3 = getSprite("/res/player/SpritePlayer_UP_Atack3");
+//                atackUP4 = getSprite("/res/player/SpritePlayer_UP_Atack4");
+//
+//                atackDown1 = getSprite("/res/player/SpritePlayer_DOWN_Atack1");
+//                atackDown2 = getSprite("/res/player/SpritePlayer_DOWN_Atack2");
+//                atackDown3 = getSprite("/res/player/SpritePlayer_DOWN_Atack3");
+//                atackDown4 = getSprite("/res/player/SpritePlayer_DOWN_Atack4");
+//
+//            } catch (IllegalArgumentException e) {
+//                e.printStackTrace();
+//                System.out.println("Erro: Caminho da imagem de atack do Player está incorreta ou a imagem não foi encontrada.");
+//            }
+//        }
+    }
+
 
     public void attack() {
         isAttacking = true;
@@ -325,7 +417,7 @@ public void draw(Graphics2D g2) {
         switch(direction){
             case "up":
                 if(spriteNum==1)
-                    image = upStandard;
+                    image = upIdle;
                      g2.drawImage(image, getPositionX(), getPositionY(), gp.tileSize, gp.tileSize, null);
                 if(spriteNum==2)
                     image = up1;

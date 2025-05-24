@@ -14,7 +14,7 @@ public class CollisionChecker {
         this.gp = gp;
     }
 
-//     Verifica se a entidade (player ou cobra) está colidindo com as bordas da tela
+//     Verifica se a entidade (‘player’ ou cobra) está a colidir com as bordas da tela
     public void checkScreenLimits(Entity entity) {
         // Limites da tela (pode ser ajustado conforme necessário)
         if (entity.positionX < 0) {
@@ -135,14 +135,15 @@ public class CollisionChecker {
         updateSolidArea(snake1);
         updateSolidArea(snake2);
     }
-    public Entity checkAttackCollision(Rectangle attackHitbox, List<Entity> entityList) {
-        for (Entity entity : entityList) {
-            if (attackHitbox.intersects(entity.solidArea)) {
-                System.out.println("Colisão detectada com: " + entity.getClass().getSimpleName());
-                return entity;
+    public Enemy checkAttackCollision(Rectangle attackHitbox, List<Enemy> enemyList) {
+        for (Enemy enemy : enemyList) {
+            if (attackHitbox.intersects(enemy.solidArea)) {
+                System.out.println("Colisão detectada com: " + enemy.getClass().getSimpleName());
+                return enemy;
             }
         }
         return null;
     }
+
 }
 

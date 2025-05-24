@@ -6,12 +6,6 @@ import javax.imageio.ImageIO;
 
 
 public class Snake extends Enemy {
-    private BufferedImage[] rightWalking;
-    private BufferedImage[] leftWalking;
-    public BufferedImage[] leftDying;
-    public BufferedImage[] rightDying;
-    public BufferedImage[] leftAttack;
-    public BufferedImage[] rightAttack;
     private int currentFrame = 0;
     private int frameDelay = 10; // Controla a velocidade da animação
     private int spriteCounter = 0;
@@ -25,8 +19,14 @@ public class Snake extends Enemy {
 
         rightWalking = new BufferedImage[4];
         leftWalking = new BufferedImage[4];
+        leftDying = new BufferedImage[5];
+        rightDying = new BufferedImage[5];
+        leftAttack = new BufferedImage[10];
+        rightAttack = new BufferedImage[10];
         setDefaultValues();
         getSnakeImage();
+        getSnakeDieImage();
+//        getSnakeAttackImage();                    // <-- Não esta funcionando
 
         solidArea = new Rectangle(0,0,22,22);
     }
@@ -78,32 +78,35 @@ public class Snake extends Enemy {
     public void getSnakeAttackImage () {
         try {
             // Carregar os sprites da pasta
-            leftAttack[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack1.png"));
-            leftAttack[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack2.png"));
-            leftAttack[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack3.png"));
-            leftAttack[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack4.png"));
-            leftAttack[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack5.png"));
-            leftAttack[5] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack6.png"));
-            leftAttack[6] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack7.png"));
-            leftAttack[7] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack8.png"));
-            leftAttack[8] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack9.png"));
-            leftAttack[9] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Left_attack10.png"));
+            leftAttack[0] = getSprite("/enemy/Snake/Attack/Snake_Left_attack1.png");
+            leftAttack[1] = getSprite("/enemy/Snake/Attack/Snake_Left_attack2.png");
+            leftAttack[2] = getSprite("/enemy/Snake/Attack/Snake_Left_attack3.png");
+            leftAttack[3] = getSprite("/enemy/Snake/Attack/Snake_Left_attack4.png");
+            leftAttack[4] = getSprite("/enemy/Snake/Attack/Snake_Left_attack5.png");
+            leftAttack[5] = getSprite("/enemy/Snake/Attack/Snake_Left_attack6.png");
+            leftAttack[6] = getSprite("/enemy/Snake/Attack/Snake_Left_attack7.png");
+            leftAttack[7] = getSprite("/enemy/Snake/Attack/Snake_Left_attack8.png");
+            leftAttack[8] = getSprite("/enemy/Snake/Attack/Snake_Left_attack9.png");
+            leftAttack[9] = getSprite("/enemy/Snake/Attack/Snake_Left_attack10.png");
 
-            rightAttack[0] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack1.png"));
-            rightAttack[1] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack2.png"));
-            rightAttack[2] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack3.png"));
-            rightAttack[3] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack4.png"));
-            rightAttack[4] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack5.png"));
-            rightAttack[5] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack6.png"));
-            rightAttack[6] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack7.png"));
-            rightAttack[7] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack8.png"));
-            rightAttack[8] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack9.png"));
-            rightAttack[9] = ImageIO.read(getClass().getResourceAsStream("/res/enemy/Snake/Atack/Snake_Right_attack10.png"));
+            rightAttack[0] = getSprite("/enemy/Snake/Attack/Snake_Right_attack1.png");
+            rightAttack[1] = getSprite("/enemy/Snake/Attack/Snake_Right_attack2.png");
+            rightAttack[2] = getSprite("/enemy/Snake/Attack/Snake_Right_attack3.png");
+            rightAttack[3] = getSprite("/enemy/Snake/Attack/Snake_Right_attack4.png");
+            rightAttack[4] = getSprite("/enemy/Snake/Attack/Snake_Right_attack5.png");
+            rightAttack[5] = getSprite("/enemy/Snake/Attack/Snake_Right_attack6.png");
+            rightAttack[6] = getSprite("/enemy/Snake/Attack/Snake_Right_attack7.png");
+            rightAttack[7] = getSprite("/enemy/Snake/Attack/Snake_Right_attack8.png");
+            rightAttack[8] = getSprite("/enemy/Snake/Attack/Snake_Right_attack9.png");
+            rightAttack[9] = getSprite("/enemy/Snake/Attack/Snake_Right_attack10.png");
+
+
+
 
             System.out.println("Sprites carregados com sucesso!");
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            System.out.println("Erro ao carregar sprites da cobra de Atack.");
+            System.out.println("Erro ao carregar sprites da cobra de Attack.");
         }
     }
 

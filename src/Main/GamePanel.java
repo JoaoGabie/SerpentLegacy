@@ -20,8 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
     final public int screenWidth = tileSize * maxScreenCol; //768
     final public int screenHeight = tileSize * maxScreenRow; //576
 
-    public int positionX;
-    public int positionY;
+
     public int limitWidth = 646;
     public int limitHeight = 466;
 
@@ -165,10 +164,11 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         collisionChecker.checkScreenLimits(player);
         collisionChecker.checkAllSnakesCollision(Entity.getListOfSnakes());
-//        Entity atingido = collisionChecker.checkAttackCollision(player.attackHitbox, Entity.getListOfSnakes());
-//        if (atingido != null) {
-//            atingido.receiveAttack(player.attackHitbox, player.damage);
-//        }
+
+        Enemy atingido = collisionChecker.checkAttackCollision(player.attackHitbox, Enemy.getEnemies());
+        if (atingido != null) {
+            atingido.receiveAttack(player.attackHitbox, player.damage);
+        }
 
         for (Snake snake : Entity.getListOfSnakes()) {
             snake.update(player); // Atualiza a posição da cobra
@@ -190,7 +190,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         // Desenha o Score
-        drawScore(g2);
+
 
         // Desenha as cobras
         for (Snake snake : Entity.getListOfSnakes()) {
@@ -201,6 +201,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
         // Desenha o player
         player.draw(g2);
+
+        drawScore(g2);
 
         // Desenha o fundo
         if (backgroundImage != null) {

@@ -21,17 +21,49 @@ public abstract class Entity {
     public int speed;
     public int damage;  // Dano que a entidade pode causar
     public int health;  // Saúde da entidade
-    public boolean isDying = false;
-    public int deathFrame = 0;
 
     public BufferedImage upStandard, up1, up2, downStandard, down1, down2, leftStandard, left1, rightStandard, right1;
     public BufferedImage  atackLeft1, atackLeft2, atackLeft3, atackLeft4, atackRight1, atackRight2, atackRight3, atackRight4, atackUP1, atackUP2, atackUP3, atackUP4, atackDown1, atackDown2, atackDown3, atackDown4;
-    public String direction;
+
+    private List<Entity> entityList = new ArrayList<>();
+    private static List<Snake> snakes = new ArrayList<>();
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
-    private List<Entity> entityList = new ArrayList<>();
-    private static List<Snake> snakes = new ArrayList<>();
+
+    public boolean isDying = false;
+    public int deathFrame = 0;
+
+    protected BufferedImage[] upWalking;
+    protected BufferedImage[] downWalking;
+    protected BufferedImage[] rightWalking;
+    protected BufferedImage[] leftWalking;
+
+    protected BufferedImage[] upDying;
+    protected BufferedImage[] downDying;
+    protected BufferedImage[] leftDying;
+    protected BufferedImage[] rightDying;
+
+    protected BufferedImage[] upIdle;
+    protected BufferedImage[] downIdle;
+    protected BufferedImage[] leftIdle;
+    protected BufferedImage[] rightIdle;
+
+    protected BufferedImage[] upAttack;
+    protected BufferedImage[] downAttack;
+    protected BufferedImage[] leftAttack;
+    protected BufferedImage[] rightAttack;
+
+    //Estados
+    protected AnimationState animationState = AnimationState.IDLE;
+    protected String direction;
+
+    // Getters genéricos (podem ser sobrescritos se precisar lógica diferente)
+    public abstract BufferedImage getWalkingFrame(String direction, int frame);
+    public abstract BufferedImage getIdleFrame(String direction, int frame);
+    public abstract BufferedImage getAttackingFrame(String direction, int frame);
+    public abstract BufferedImage getDyingFrame(String direction, int frame);
+
 
     // Construtor
     public Entity(String name, int positionX, int positionY, int speed, int damage, int health) {
@@ -43,6 +75,68 @@ public abstract class Entity {
         this.health = health;
     }
 
+    public enum AnimationState {
+        IDLE, WALKING, ATTACKING, DYING
+    }
+
+    public void draw(Graphics2D g2, Player player) {
+        switch (animationState) {
+            case DYING:
+                drawDying(g2);
+                break;
+            case ATTACKING:
+                drawAttacking(g2);
+                break;
+            case WALKING:
+                drawWalking(g2);
+                break;
+            case IDLE:
+            default:
+                drawIdle(g2);
+                break;
+        }
+    }
+
+    // Métodos padrão, podem ser sobrescritos depois
+    public void drawDying(Graphics2D g2) {
+        g2.drawImage(getDeathImage(), positionX, positionY, null);
+    }
+    public void drawAttacking(Graphics2D g2) {
+        g2.drawImage(getAttackImage(), positionX, positionY, null);
+    }
+    public void drawWalking(Graphics2D g2) {
+        g2.drawImage(getWalkImage(), positionX, positionY, null);
+    }
+    public void drawIdle(Graphics2D g2) {
+        g2.drawImage(getIdleImage(), positionX, positionY, null);
+    }
+
+    public BufferedImage getDeathImage() {
+        // Exemplo genérico
+        return deathSprite;
+    }
+    public BufferedImage getAttackImage() {
+        // Usa direção/spriteNum para escolher, exemplo:
+        if (direction.equals("left")) return atackLeft1;
+        // ...e assim por diante
+    }
+
+    @Override
+    public BufferedImage getWalkImage() {
+        // Idem para andar
+        if (direction.equals("up")) {
+            if (spriteNum == 1) return up1;
+            if (spriteNum == 2) return up2;
+            else return upIdle;
+        }
+        // ...etc.
+    }
+
+    @Override
+    public BufferedImage getIdleImage() {
+        // Escolha padrão para parado
+        return downStandard;
+    }
 
 
     public BufferedImage getSprite(String imagePath) {
@@ -56,35 +150,7 @@ public abstract class Entity {
         }
         return image;
     }
-    public void receiveAttack (Rectangle attackHitbox, int damage) {
-        if (this.solidArea.intersects(attackHitbox)) {
-            takeDamage(damage);
-        }
-    }
 
-    // Aplica o dano à entidade
-    public void takeDamage(int amount) {
-        health -= amount;
-        if (health <= 0) {
-            onDeath();
-            startDeathAnimation();
-        }
-    }
-
-    public void takeDamageFrom(Entity attacker) {
-        takeDamage(attacker.damage);
-    }
-
-    public void startDeathAnimation() {
-        isDying = true;
-        deathFrame = 0;
-    }
-
-    //     Método para morte (ação que ocorre quando a entidade morre)
-    protected void onDeath() {
-        System.out.println(name + " morreu!");
-        // Outras ações quando a entidade morre (pode ser removida da lista, animação, etc.)
-    }
 
     public int getPositionX() {
         return positionX;
