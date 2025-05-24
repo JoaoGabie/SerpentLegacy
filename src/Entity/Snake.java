@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
-public class Snake extends Entity {
+public class Snake extends Enemy {
     private BufferedImage[] rightWalking;
     private BufferedImage[] leftWalking;
     public BufferedImage[] leftDying;

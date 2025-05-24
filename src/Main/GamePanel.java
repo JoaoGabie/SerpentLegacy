@@ -1,7 +1,7 @@
 package Main;
 
 import Entity.*;
-import Objects.SuperObject;
+
 import javax.imageio.ImageIO;
 import java.awt.Image;
 import java.io.IOException;
@@ -36,6 +36,23 @@ public class GamePanel extends JPanel implements Runnable {
     public Image backgroundImageTop;
     public Random random = new Random();
 
+    private class ScoreManager {
+        private int score = 0;
+
+        public int getDifficultyLevel() {
+            return 1 + score / 100;
+        }
+
+        public void addScore(int value) {
+            score += value;
+        }
+
+        public int getScore() {
+            return score;
+        }
+    }
+    private ScoreManager scoreManager = new ScoreManager();
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -55,6 +72,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         Entity.getListOfSnakes();
         manageSnakes(25);
+    }
+    public void enemyDefeated() {
+        scoreManager.addScore(10); // ou a quantidade que preferir
+    }
+    public void drawScore(Graphics2D g2) {
+        g2.setColor(Color.WHITE);
+        g2.drawString("Pontos: " + scoreManager.getScore(), 10, 20);
     }
 
     private void manageSnakes(int numberOfSnakes) {
@@ -141,7 +165,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         collisionChecker.checkScreenLimits(player);
         collisionChecker.checkAllSnakesCollision(Entity.getListOfSnakes());
-        collisionChecker.checkAttackCollision(player, Entity.getListOfSnakes());
+//        Entity atingido = collisionChecker.checkAttackCollision(player.attackHitbox, Entity.getListOfSnakes());
+//        if (atingido != null) {
+//            atingido.receiveAttack(player.attackHitbox, player.damage);
+//        }
 
         for (Snake snake : Entity.getListOfSnakes()) {
             snake.update(player); // Atualiza a posição da cobra
@@ -162,6 +189,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g;
 
+        // Desenha o Score
+        drawScore(g2);
+
         // Desenha as cobras
         for (Snake snake : Entity.getListOfSnakes()) {
             snake.draw(g2, player);
@@ -169,14 +199,13 @@ public class GamePanel extends JPanel implements Runnable {
         if (backgroundImageTop != null) {
             g2.drawImage(backgroundImageTop, 0, 0, screenWidth, screenHeight, this);
         }
+        // Desenha o player
         player.draw(g2);
 
         // Desenha o fundo
         if (backgroundImage != null) {
             g2.drawImage(backgroundImage, 0, 0, screenWidth, screenHeight, this);
         }
-        // Desenha o player
-
 
         g2.dispose();
     }

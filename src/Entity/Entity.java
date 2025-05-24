@@ -71,6 +71,10 @@ public abstract class Entity {
         }
     }
 
+    public void takeDamageFrom(Entity attacker) {
+        takeDamage(attacker.damage);
+    }
+
     public void startDeathAnimation() {
         isDying = true;
         deathFrame = 0;

@@ -135,22 +135,14 @@ public class CollisionChecker {
         updateSolidArea(snake1);
         updateSolidArea(snake2);
     }
-    public void checkAttackCollision(Player player, List<Snake> entityList) {
-        Iterator<Snake> iterator = entityList.iterator();
-        while (iterator.hasNext()) {
-            Snake entity = iterator.next();
-            // Ignora o player durante a verificação de colisão
-            if (player.attackHitbox.intersects(entity.solidArea)) {
-                // Se houver colisão, imprime a mensagem de debug
+    public Entity checkAttackCollision(Rectangle attackHitbox, List<Entity> entityList) {
+        for (Entity entity : entityList) {
+            if (attackHitbox.intersects(entity.solidArea)) {
                 System.out.println("Colisão detectada com: " + entity.getClass().getSimpleName());
-                entity.receiveAttack(player.attackHitbox, player.damage);  // Chama o método adequado para receber o ataque
-
-                // Verifica se a saúde da cobra é 0 e remove se necessário
-                if (entity.health <= 0) {
-                    iterator.remove(); // Remove a cobra da lista usando o iterador
-                }
+                return entity;
             }
         }
+        return null;
     }
 }
 
